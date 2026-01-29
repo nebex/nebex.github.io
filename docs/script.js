@@ -10,7 +10,7 @@ let baseSize = 8 / window.devicePixelRatio;
 
 // Scale up on mobile hi-res devices for better visibility
 if (window.innerWidth < 768 && window.devicePixelRatio > 1) {
-    baseSize *= 3;
+    baseSize *= 6;
 }
 
 const starFiles = [
@@ -50,5 +50,4 @@ function createStar() {
 
 for (let i = 0; i < starCount; i++) {
   createStar();
-
 }

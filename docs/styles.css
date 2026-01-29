@@ -144,3 +144,24 @@ html, body {
   0%, 100% { opacity: 0.1; }
   50% { opacity: 1; }
 }
+
+.watermark {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+
+  width: 20%;
+  max-width: 100px;     /* caps the watermark size */
+  min-width: 60px;      /* optional: keeps it readable */
+
+  height: auto;
+  opacity: 1;        /* watermark vibes */
+  pointer-events: none;/* don't block clicks */
+}
+
+@media (max-width: 700px) {
+  .watermark {
+    max-width: 50px;
+    opacity: 0.15;
+  }
+}
