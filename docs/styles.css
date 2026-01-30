@@ -138,6 +138,7 @@ html, body {
   position: absolute;
   opacity: 0;
   animation: blink 4s ease-in-out infinite;
+  pointer-events: none;
 }
 
 @keyframes blink {
