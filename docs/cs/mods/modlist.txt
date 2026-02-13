@@ -1,0 +1,183 @@
+# ═══════════════════════════════════════════════════════════════
+# modlist.txt  —  Your Modpack's Mod List
+# ═══════════════════════════════════════════════════════════════
+#
+# FORMAT GUIDE:
+#
+#   pack: <Pack Name>          ← displayed as the page title
+#   subtitle: <short tagline>  ← shown under the title
+#
+#   [Category Name]            ← collapsible section header
+#
+#   - modrinth: <url>          ← mod from modrinth (auto-fetches name & icon)
+#     desc: Your description.  ← custom description (required, shown on tile)
+#
+#   - name: My Custom Mod      ← mod not on modrinth
+#     icon: ./icons/mod.png    ← local or remote icon (optional)
+#     desc: Does cool stuff.
+#
+#   submods:                   ← add plugins/extensions under any mod
+#     - modrinth: <url>
+#       desc: ...
+#     - name: ...
+#       desc: ...
+#
+# Lines starting with # are comments and are ignored.
+# ═══════════════════════════════════════════════════════════════
+
+pack: Modlist
+subtitle: 1.21.1 • NeoForge
+
+[Generace Světa]
+- modrinth: https://modrinth.com/mod/biomes-o-plenty
+  desc: Mod který přidává nové biomy.
+
+- modrinth: https://modrinth.com/mod/oh-the-biomes-weve-gone
+  desc: Další mod který přidává biomy.
+
+- modrinth: https://modrinth.com/mod/regions-unexplored
+  desc: Další mod který přidává biomy.
+
+- modrinth: https://modrinth.com/mod/terralith
+  desc: Mod pro vanilla-ish biomy a terén.
+
+- modrinth: https://modrinth.com/mod/tectonic
+  desc: Mod pro generaci světa umožňující vlastní výškový rozdíl ve světě.
+
+[Prozkoumávání a dobrodružství]
+- modrinth: https://modrinth.com/mod/dungeons-and-taverns
+  desc: Stovky nových struktur jako dungeony, vesnice, taverny anebo ruiny.
+
+- modrinth: https://modrinth.com/mod/towns-and-towers
+  desc: Nové stavby na prozkoumání.
+
+- modrinth: https://modrinth.com/mod/waystones
+  desc: Waystony umožňují teleportaci k ostatním objeveným waystonům.
+
+- modrinth: https://modrinth.com/mod/travelersbackpack
+  desc: Batohy které jsou užitečné pro extra inventář s integrovaným spacím pytlem.
+
+[Mobové]
+- modrinth: https://modrinth.com/mod/creeper-overhaul
+  desc: Nové typy creeperů.
+
+- modrinth: https://modrinth.com/mod/villager-names-serilum
+  desc: Dává každému villagerovi jméno.
+
+[Jídlo]
+- modrinth: https://modrinth.com/mod/farmers-delight
+  desc: Mód s novým jídlem.
+  submods:
+    - modrinth: https://modrinth.com/mod/ends-delight
+    desc: Přidává jídlo do endu.
+
+- modrinth: https://modrinth.com/mod/lets-do-vinery
+  desc: Mod s vínem.
+
+[Technologie]
+- modrinth: https://modrinth.com/mod/create
+  desc: Jeden z nejdůležitějších módů. Umožňuje automaci skoro čehokoliv.
+  submods:
+    - modrinth: https://modrinth.com/mod/create-deco
+    desc: Dekorační bloky ve stylu create módu.
+
+    - modrinth: https://modrinth.com/mod/create-contraption-terminals
+    desc: Kompatibilita s Tom's Simple Storage módem.
+
+    - modrinth: https://modrinth.com/mod/slice-and-dice
+    desc: Kompatibilita s Farmer's Delight.
+
+- modrinth: https://modrinth.com/mod/toms-storage
+  desc: Jednoduchý sklad.
+  submods:
+    - modrinth: https://modrinth.com/mod/create-contraption-terminals
+    desc: Kompatibilita s Create módem.
+[Dekorace/Bloky]
+- modrinth: https://modrinth.com/mod/another-furniture
+  desc: Nový nábytek.
+
+- modrinth: https://modrinth.com/mod/chipped
+  desc: Variace bloků na stavění.
+
+- modrinth: https://modrinth.com/mod/handcrafted
+  desc: Různé styly nábytku.
+
+- modrinth: https://modrinth.com/mod/supplementaries
+  desc: Doplňky/Dekorace.
+
+[Quality of Life]
+- modrinth: https://modrinth.com/mod/jade
+  desc: Ukáže ti na jaký block se koukáš.
+
+- modrinth: https://modrinth.com/mod/advancement-plaques
+  desc: Lepší ukazovatel nových achievmentů.
+
+- modrinth: https://modrinth.com/mod/ambientsounds
+  desc: Ambientní zvuky podle toho, kde jsi.
+
+- modrinth: https://modrinth.com/mod/appleskin
+  desc: Lepší ukazovatel a systém hladu.
+
+- modrinth: https://modrinth.com/mod/carry-on
+  desc: Nes ve svých rukách zvířata/villagery.
+
+- modrinth: https://modrinth.com/mod/crafting-tweaks
+  desc: Lepší crafting.
+
+- modrinth: https://modrinth.com/mod/cubes-without-borders
+  desc: Hraj Minecraft v borderless fullscreenu.
+
+- modrinth: https://modrinth.com/mod/diagonal-fences
+  desc: Diagonální ploty.
+
+- modrinth: https://modrinth.com/mod/diagonal-windows
+  desc: Diagonální sklo. *nevim jestli toto funguje s continuity.
+
+- modrinth: https://modrinth.com/mod/easy-anvils
+  desc: Věci v anvilkách zůstávají, lepší balanc ceny xp, name tagy můžeš přejmenovat bez kovadliny pomocí shift+pravé tlačítko.
+
+- modrinth: https://modrinth.com/mod/enchantment-descriptions
+  desc: Ukáže ti co daný enchant dělá.
+
+- modrinth: https://modrinth.com/mod/first-person-model
+  desc: Ukáže ti tvoje tělo i v první osobě.
+
+- modrinth: https://modrinth.com/mod/gravestone-mod
+  desc: Hroby po smrti.
+
+- modrinth: https://modrinth.com/mod/inventory-tweaks-refoxed
+  desc: Snadno si setřiď inventář.
+
+- modrinth: https://modrinth.com/mod/item-highlighter
+  desc: Ukáže se ti v inventáři hvězdička u nových itemů.
+
+- modrinth: https://modrinth.com/mod/lambdynamiclights
+  desc: Dynamické světla pro ty co nepoužívají shadery.
+
+- modrinth: https://modrinth.com/mod/not-enough-animations
+  desc: Více animací.
+
+- modrinth: https://modrinth.com/mod/sound
+  desc: Nové zvuky ve hře i v menu.
+
+- modrinth: https://modrinth.com/mod/sound-physics-remastered
+  desc: Nový systém zvuku který přidá efekty dle prostředí.
+
+- modrinth: https://modrinth.com/mod/shulkerboxtooltip
+  desc: Podívej se co je v shulker boxu bez toho, aby jsi ho musel pokládat.
+
+- modrinth: https://modrinth.com/mod/rightclickharvest
+  desc: Skliď farmu pravým tlačítkem a nemusíš znova sázet.
+
+- modrinth: https://modrinth.com/mod/simple-voice-chat
+  desc: Uslyšíš lidi kteří jsou blízko tebe. Taky si můžeš založit group a používat to jako discord.
+
+- modrinth: https://modrinth.com/mod/what-are-they-up-to
+  desc: Více animací.
+
+- modrinth: https://modrinth.com/mod/visual-workbench
+  desc: Věci v crafting tablech zůstávají po zavření.
+
+- modrinth: https://modrinth.com/mod/easy-magic
+  desc: Itemy v enchant tablech zůstávají po zavření. V enchant tablu je také snadné tlačítko pro přelosování enchantů.
+

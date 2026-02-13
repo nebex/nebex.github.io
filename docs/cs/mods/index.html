@@ -1,0 +1,893 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Modpack</title>
+<style>
+/* === RESET === */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* === VARIABLES === */
+:root {
+  --bg:         #00040D;
+  --text:       #adceff;
+  --accent:     #4f8ef7;
+  --accent-dim: rgba(79, 142, 247, 0.2);
+  --teal:       #7ec8e3;
+  --tile:       rgba(7, 16, 38, 0.88);
+  --border:     rgba(79, 142, 247, 0.2);
+  --radius:     10px;
+  --font:       "JetBrainsMonoNF", "JetBrains Mono", "Fira Code", monospace;
+}
+
+/* === BASE === */
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+}
+
+/* font imports matching your styles.css */
+@font-face { font-family: "JetBrainsMonoNF"; src: url("./font/JetBrainsMonoNerdFontMono-Regular.ttf"); font-weight: 400; }
+@font-face { font-family: "JetBrainsMonoNF"; src: url("./font/JetBrainsMonoNerdFontMono-Bold.ttf");    font-weight: 700; }
+@font-face { font-family: "JetBrainsMonoNF"; src: url("./font/JetBrainsMonoNerdFontMono-Light.ttf");   font-weight: 300; }
+
+/* override your styles.css rule that adds dark backgrounds to all text tags */
+h1, h2, h3, p, li, a, span, strong, em, code, pre {
+  background-color: transparent !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  width: auto !important;
+}
+
+/* === STARS === */
+#star-container {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: -1;
+  pointer-events: none;
+}
+.star {
+  position: absolute;
+  opacity: 0;
+  animation: twinkle 4s ease-in-out infinite;
+  pointer-events: none;
+}
+@keyframes twinkle {
+  0%, 100% { opacity: 0.05; }
+  50%       { opacity: 1; }
+}
+
+/* === LAYOUT === */
+#app {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 24px 96px;
+}
+
+/* === HEADER === */
+header {
+  text-align: center;
+  margin-bottom: 48px;
+}
+#pack-title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  background: linear-gradient(130deg, #cce5ff, #7ec8e3, #4f8ef7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+#pack-subtitle {
+  margin-top: 10px;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.38;
+}
+
+/* === STATUS LINE === */
+#status {
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  opacity: 0.36;
+  min-height: 18px;
+  margin-bottom: 20px;
+}
+
+/* === CATEGORY === */
+.category {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: rgba(4, 10, 26, 0.92);
+  overflow: hidden;
+  box-shadow: 0 4px 28px rgba(0,0,0,0.55);
+}
+
+.cat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 18px;
+  cursor: pointer;
+  user-select: none;
+  background: rgba(79, 142, 247, 0.05);
+  transition: background 0.15s;
+}
+.cat-header:hover {
+  background: rgba(79, 142, 247, 0.10);
+}
+
+.cat-arrow {
+  font-size: 0.6rem;
+  color: var(--teal);
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  /* starts pointing down (open) */
+  transform: rotate(90deg);
+}
+
+.cat-name {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+  flex: 1;
+}
+
+.cat-count {
+  font-size: 0.65rem;
+  opacity: 0.3;
+}
+
+/* category body — open by default */
+.cat-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+  gap: 12px;
+  padding: 14px;
+  border-top: 1px solid var(--border);
+}
+
+/* === MOD TILE === */
+.mod-tile {
+  background: var(--tile);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color 0.15s, transform 0.12s, box-shadow 0.15s;
+}
+.mod-tile:hover {
+  border-color: rgba(126, 200, 227, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(79, 142, 247, 0.15);
+}
+
+/* mod header row: icon + name + link */
+.mod-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.mod-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: #0d1e3c;
+}
+.mod-icon-ph {
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: linear-gradient(135deg, #0d1e3c, #162f56);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  color: var(--teal);
+  opacity: 0.5;
+}
+
+.mod-title-col {
+  flex: 1;
+  min-width: 0;
+}
+.mod-name {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #ddeeff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mod-link {
+  display: block;
+  font-size: 0.62rem;
+  color: var(--teal);
+  opacity: 0.35;
+  text-decoration: none;
+  margin-top: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: opacity 0.15s;
+}
+.mod-link:hover { opacity: 0.85; text-decoration: underline; }
+
+/* mod description */
+.mod-desc {
+  font-size: 0.76rem;
+  line-height: 1.6;
+  opacity: 0.65;
+}
+
+/* === SUBMOD SECTION === */
+.submod-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border-top: 1px solid rgba(79, 142, 247, 0.12);
+  padding-top: 8px;
+  margin-top: 0;
+}
+
+/* The toggle button */
+.submod-toggle {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  /* reset button styles */
+  background: none;
+  border: none;
+  border-radius: 6px;
+  padding: 5px 6px;
+  margin-bottom: 6px;
+
+  font-family: var(--font);
+  font-size: 0.67rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--teal);
+  opacity: 0.6;
+  cursor: pointer;
+  user-select: none;
+  text-align: left;
+  width: 100%;
+  transition: opacity 0.15s, background 0.15s;
+}
+.submod-toggle:hover {
+  opacity: 1;
+  background: rgba(79, 142, 247, 0.07);
+}
+
+.submod-arrow {
+  font-size: 0.55rem;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+  /* starts pointing down = open */
+  transform: rotate(90deg);
+}
+
+/* The list of submods */
+.submod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-left: 8px;
+  border-left: 2px solid rgba(79, 142, 247, 0.15);
+  margin-left: 2px;
+}
+
+/* === SUBMOD ROW === */
+.submod-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  background: rgba(79, 142, 247, 0.04);
+  border: 1px solid rgba(79, 142, 247, 0.10);
+  border-radius: 7px;
+  transition: background 0.15s, border-color 0.15s;
+}
+.submod-row:hover {
+  background: rgba(79, 142, 247, 0.09);
+  border-color: rgba(126, 200, 227, 0.25);
+}
+
+.sub-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  background: #0d1e3c;
+  margin-top: 1px;
+}
+.sub-icon-ph {
+  width: 28px;
+  height: 28px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  border: 1px solid rgba(79, 142, 247, 0.12);
+  background: #0a1830;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: var(--teal);
+  opacity: 0.45;
+  margin-top: 1px;
+}
+
+.sub-col { flex: 1; min-width: 0; }
+.sub-name {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #c8dcf8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sub-link {
+  display: block;
+  font-size: 0.58rem;
+  color: var(--teal);
+  opacity: 0.3;
+  text-decoration: none;
+  margin-top: 1px;
+  transition: opacity 0.15s;
+}
+.sub-link:hover { opacity: 0.8; text-decoration: underline; }
+.sub-desc {
+  font-size: 0.7rem;
+  line-height: 1.45;
+  opacity: 0.5;
+  margin-top: 3px;
+}
+
+/* === LOOSE GRID (no category) === */
+.loose-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+/* === ANIMATIONS === */
+.fade-in {
+  animation: fadeUp 0.4s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+</head>
+<body>
+
+<div id="star-container"></div>
+
+<div id="app">
+  <header>
+    <h1 id="pack-title">Modpack</h1>
+    <p id="pack-subtitle"></p>
+  </header>
+  <p id="status"></p>
+  <div id="root"></div>
+</div>
+
+<script>
+// ============================================================
+//  MODLIST FORMAT  (edit DEFAULT below, or load modlist.txt)
+// ============================================================
+//
+//  pack: My Pack Name
+//  subtitle: 1.21.4 · Fabric
+//
+//  [Category Name]
+//
+//  - modrinth: https://modrinth.com/mod/sodium
+//    desc: Blazing fast rendering.
+//
+//  - modrinth: https://modrinth.com/mod/iris
+//    desc: Shader loader.
+//    submods:
+//      - modrinth: https://modrinth.com/mod/complementary-shaders-reimagined
+//        desc: Beautiful warm shaders.
+//      - name: Custom Shader Config
+//        desc: My hand-tuned settings.
+//
+//  - name: Unlisted Mod
+//    desc: Not on Modrinth.
+//    icon: ./icons/something.png
+//
+//  Lines beginning with # are comments.
+// ============================================================
+
+const DEFAULT = `
+pack: Stellar Survival
+subtitle: 1.21.4 · Fabric · 48 mods
+
+[Performance]
+
+- modrinth: https://modrinth.com/mod/sodium
+  desc: The go-to rendering replacement. Expect 2-5x your vanilla FPS on almost any hardware.
+
+- modrinth: https://modrinth.com/mod/lithium
+  desc: Server-side optimisations covering mob AI, block ticking, and chunk loading.
+
+- modrinth: https://modrinth.com/mod/iris
+  desc: Shader support built to run alongside Sodium. Two shader packs are bundled below.
+  submods:
+    - modrinth: https://modrinth.com/mod/complementary-shaders-reimagined
+      desc: Warm, cinematic lighting. Default shader for this pack — good performance headroom.
+    - modrinth: https://modrinth.com/mod/complementary-unbound
+      desc: The unrestricted version. Heavier but jaw-dropping — save it for screenshots.
+
+[World Generation]
+
+- modrinth: https://modrinth.com/mod/terralith
+  desc: Adds 100+ new biomes and rewrites terrain generation into something worth exploring.
+
+- modrinth: https://modrinth.com/mod/tectonic
+  desc: Scales up mountains and valleys dramatically. Works with Terralith seamlessly.
+  submods:
+    - modrinth: https://modrinth.com/mod/terrablender
+      desc: Required library that lets Terralith and Tectonic share biome space without conflict.
+
+[Quality of Life]
+
+- modrinth: https://modrinth.com/mod/jade
+  desc: Shows a HUD tooltip with info about whatever block or mob you are looking at.
+
+- modrinth: https://modrinth.com/mod/inventory-profiles-next
+  desc: One-click sorting, auto stack-to-chest, and item-locking so you stop losing your sword.
+  submods:
+    - modrinth: https://modrinth.com/mod/libipn
+      desc: Required runtime library for Inventory Profiles Next.
+
+- modrinth: https://modrinth.com/mod/waystones
+  desc: Craftable fast-travel stones you can place anywhere in the world.
+
+[Exploration]
+
+- modrinth: https://modrinth.com/mod/dungeons-and-taverns
+  desc: Hundreds of hand-crafted structures — real dungeons, villages, ruins. Not procedural filler.
+
+- modrinth: https://modrinth.com/mod/travelersbackpack
+  desc: Large craftable backpacks with unique textures, a sleeping bag, and built-in fluid tanks.
+  submods:
+    - name: Backpack Config Tweaks
+      desc: Custom config for this pack — doubled capacity, sleeping bag always enabled.
+    - name: Backpack Texture Overhaul
+      desc: Retextured all variants to match the pack aesthetic.
+`.trim();
+
+// ─── PARSER ────────────────────────────────────────────────────────────────────
+function parseModlist(text) {
+  const result = { title: 'Modpack', subtitle: '', categories: [], loose: [] };
+  let currentCategory = null;
+  let currentMod = null;
+  let inSubmods = false;
+
+  function pushMod() {
+    if (!currentMod) return;
+    if (currentCategory) {
+      currentCategory.mods.push(currentMod);
+    } else {
+      result.loose.push(currentMod);
+    }
+    currentMod = null;
+    inSubmods = false;
+  }
+
+  const lines = text.split('\n');
+
+  for (const raw of lines) {
+    const line = raw.trimEnd();
+    const trimmed = line.trimStart();
+
+    // blank or comment
+    if (!trimmed || trimmed.startsWith('#')) continue;
+
+    // pack meta
+    const packMatch = trimmed.match(/^pack\s*:\s*(.+)/i);
+    if (packMatch) { result.title = packMatch[1].trim(); continue; }
+
+    const subMatch = trimmed.match(/^subtitle\s*:\s*(.+)/i);
+    if (subMatch) { result.subtitle = subMatch[1].trim(); continue; }
+
+    // [Category]
+    const catMatch = trimmed.match(/^\[(.+)\]$/);
+    if (catMatch) {
+      pushMod();
+      currentCategory = { name: catMatch[1].trim(), mods: [] };
+      result.categories.push(currentCategory);
+      continue;
+    }
+
+    // top-level mod: "- modrinth: url" or "- name: text"
+    const topModrinth = trimmed.match(/^-\s+modrinth\s*:\s*(.+)/i);
+    const topName     = trimmed.match(/^-\s+name\s*:\s*(.+)/i);
+
+    if (topModrinth || topName) {
+      // only treat as a new top-level mod if NOT inside a submods block
+      // (submods use the same "- modrinth:" syntax but with deeper indentation)
+      const indent = line.match(/^(\s*)/)[1].length;
+      if (indent <= 2) {
+        // top-level mod (indent 0 or 1)
+        pushMod();
+        inSubmods = false;
+        currentMod = { modrinth: null, name: null, icon: null, desc: '', submods: [] };
+        if (topModrinth) currentMod.modrinth = topModrinth[1].trim();
+        else              currentMod.name     = topName[1].trim();
+        continue;
+      }
+    }
+
+    if (!currentMod) continue;
+
+    // submods: marker
+    if (/^submods\s*:/i.test(trimmed)) {
+      inSubmods = true;
+      continue;
+    }
+
+    if (inSubmods) {
+      // new submod entry (indented "- modrinth:" or "- name:")
+      const subMod  = trimmed.match(/^-\s+modrinth\s*:\s*(.+)/i);
+      const subName = trimmed.match(/^-\s+name\s*:\s*(.+)/i);
+
+      if (subMod || subName) {
+        const s = { modrinth: null, name: null, icon: null, desc: '' };
+        if (subMod) s.modrinth = subMod[1].trim();
+        else        s.name     = subName[1].trim();
+        currentMod.submods.push(s);
+        continue;
+      }
+
+      // submod field (desc / icon / name continuation)
+      const lastSub = currentMod.submods.at(-1);
+      if (lastSub) {
+        const descM = trimmed.match(/^desc\s*:\s*(.+)/i);
+        const iconM = trimmed.match(/^icon\s*:\s*(.+)/i);
+        const nmM   = trimmed.match(/^name\s*:\s*(.+)/i);
+        if (descM) { lastSub.desc = descM[1].trim(); continue; }
+        if (iconM) { lastSub.icon = iconM[1].trim(); continue; }
+        if (nmM)   { lastSub.name = nmM[1].trim();   continue; }
+      }
+      continue;
+    }
+
+    // top-level mod fields
+    const descM = trimmed.match(/^desc\s*:\s*(.+)/i);
+    const iconM = trimmed.match(/^icon\s*:\s*(.+)/i);
+    const nmM   = trimmed.match(/^name\s*:\s*(.+)/i);
+    if (descM) { currentMod.desc = descM[1].trim(); continue; }
+    if (iconM) { currentMod.icon = iconM[1].trim(); continue; }
+    if (nmM)   { currentMod.name = nmM[1].trim();   continue; }
+  }
+
+  pushMod();
+  return result;
+}
+
+// ─── MODRINTH API ───────────────────────────────────────────────────────────────
+const _apiCache = new Map();
+
+function slugFromUrl(url) {
+  if (!url) return null;
+  const m = url.match(/modrinth\.com\/[^/]+\/([^/?#\s]+)/i);
+  return m ? m[1] : null;
+}
+
+async function fetchFromModrinth(url) {
+  if (_apiCache.has(url)) return _apiCache.get(url);
+
+  const slug = slugFromUrl(url);
+  if (!slug) { _apiCache.set(url, null); return null; }
+
+  try {
+    const resp = await fetch(`https://api.modrinth.com/v2/project/${slug}`, {
+      headers: { 'User-Agent': 'modpack-viewer/1.0 (personal use)' }
+    });
+    if (!resp.ok) { _apiCache.set(url, null); return null; }
+    const data = await resp.json();
+    const result = { name: data.title || slug, icon: data.icon_url || null };
+    _apiCache.set(url, result);
+    return result;
+  } catch {
+    _apiCache.set(url, null);
+    return null;
+  }
+}
+
+// ─── DOM BUILDER HELPERS ────────────────────────────────────────────────────────
+function makeIcon(src, size, baseClass) {
+  if (src) {
+    const img = document.createElement('img');
+    img.className = baseClass;
+    img.src = src;
+    img.width = size;
+    img.height = size;
+    img.onerror = () => img.replaceWith(makePlaceholder(baseClass + '-ph'));
+    return img;
+  }
+  return makePlaceholder(baseClass + '-ph');
+}
+
+function makePlaceholder(cls) {
+  const d = document.createElement('div');
+  d.className = cls;
+  d.textContent = '✦';
+  return d;
+}
+
+// ─── BUILD SUBMOD ROW ────────────────────────────────────────────────────────────
+function buildSubRow(sub) {
+  const row = document.createElement('div');
+  row.className = 'submod-row';
+
+  row.appendChild(makeIcon(sub._icon, 28, 'sub-icon'));
+
+  const col = document.createElement('div');
+  col.className = 'sub-col';
+
+  const name = document.createElement('div');
+  name.className = 'sub-name';
+  name.textContent = sub._name || '—';
+  col.appendChild(name);
+
+  if (sub.modrinth) {
+    const slug = slugFromUrl(sub.modrinth);
+    const link = document.createElement('a');
+    link.className = 'sub-link';
+    link.href = sub.modrinth;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'modrinth.com/' + (slug || '');
+    col.appendChild(link);
+  }
+
+  if (sub.desc) {
+    const desc = document.createElement('div');
+    desc.className = 'sub-desc';
+    desc.textContent = sub.desc;
+    col.appendChild(desc);
+  }
+
+  row.appendChild(col);
+  return row;
+}
+
+// ─── BUILD MOD TILE ──────────────────────────────────────────────────────────────
+function buildModTile(mod) {
+  const tile = document.createElement('div');
+  tile.className = 'mod-tile fade-in';
+
+  // ── header: icon + name + optional link ──
+  const header = document.createElement('div');
+  header.className = 'mod-header';
+
+  header.appendChild(makeIcon(mod._icon, 44, 'mod-icon'));
+
+  const titleCol = document.createElement('div');
+  titleCol.className = 'mod-title-col';
+
+  const nameEl = document.createElement('div');
+  nameEl.className = 'mod-name';
+  nameEl.textContent = mod._name || '—';
+  titleCol.appendChild(nameEl);
+
+  if (mod.modrinth) {
+    const slug = slugFromUrl(mod.modrinth);
+    const link = document.createElement('a');
+    link.className = 'mod-link';
+    link.href = mod.modrinth;
+    link.target = '_blank';
+    link.rel = 'noopener';
+    link.textContent = 'modrinth.com/' + (slug || '');
+    titleCol.appendChild(link);
+  }
+
+  header.appendChild(titleCol);
+  tile.appendChild(header);
+
+  // ── description ──
+  if (mod.desc) {
+    const desc = document.createElement('p');
+    desc.className = 'mod-desc';
+    desc.textContent = mod.desc;
+    tile.appendChild(desc);
+  }
+
+  // ── submods ──
+  if (mod.submods && mod.submods.length > 0) {
+    const section = document.createElement('div');
+    section.className = 'submod-section';
+
+    // Toggle button
+    const toggle = document.createElement('button');
+    toggle.className = 'submod-toggle';
+
+    const arrow = document.createElement('span');
+    arrow.className = 'submod-arrow';
+    arrow.textContent = '▶';
+
+    const label = document.createElement('span');
+    label.textContent = mod.submods.length + ' included mod' + (mod.submods.length > 1 ? 's' : '');
+
+    toggle.appendChild(arrow);
+    toggle.appendChild(label);
+
+    // List of submod rows
+    const list = document.createElement('div');
+    list.className = 'submod-list';
+    for (const sub of mod.submods) {
+      list.appendChild(buildSubRow(sub));
+    }
+
+    // State: starts OPEN
+    let isOpen = true;
+    arrow.style.transform = 'rotate(90deg)'; // pointing down = open
+
+    toggle.addEventListener('click', function() {
+      isOpen = !isOpen;
+      if (isOpen) {
+        list.style.display = 'flex';
+        arrow.style.transform = 'rotate(90deg)';
+      } else {
+        list.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+      }
+    });
+
+    section.appendChild(toggle);
+    section.appendChild(list);
+    tile.appendChild(section);
+  }
+
+  return tile;
+}
+
+// ─── BUILD CATEGORY ──────────────────────────────────────────────────────────────
+function buildCategory(cat) {
+  const wrap = document.createElement('div');
+  wrap.className = 'category fade-in';
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'cat-header';
+
+  const arrow = document.createElement('span');
+  arrow.className = 'cat-arrow';
+  arrow.textContent = '▶';
+
+  const nameEl = document.createElement('span');
+  nameEl.className = 'cat-name';
+  nameEl.textContent = cat.name;
+
+  const count = document.createElement('span');
+  count.className = 'cat-count';
+  count.textContent = cat.mods.length + ' mod' + (cat.mods.length !== 1 ? 's' : '');
+
+  header.appendChild(arrow);
+  header.appendChild(nameEl);
+  header.appendChild(count);
+
+  // Body
+  const body = document.createElement('div');
+  body.className = 'cat-body';
+  for (const mod of cat.mods) {
+    body.appendChild(buildModTile(mod));
+  }
+
+  // State: starts OPEN
+  let isOpen = true;
+  arrow.style.transform = 'rotate(90deg)';
+
+  header.addEventListener('click', function() {
+    isOpen = !isOpen;
+    if (isOpen) {
+      body.style.display = 'grid';
+      arrow.style.transform = 'rotate(90deg)';
+    } else {
+      body.style.display = 'none';
+      arrow.style.transform = 'rotate(0deg)';
+    }
+  });
+
+  wrap.appendChild(header);
+  wrap.appendChild(body);
+  return wrap;
+}
+
+// ─── MAIN RENDER ────────────────────────────────────────────────────────────────
+async function render(source) {
+  const root   = document.getElementById('root');
+  const status = document.getElementById('status');
+  root.innerHTML = '';
+
+  const data = parseModlist(source);
+
+  document.getElementById('pack-title').textContent    = data.title;
+  document.getElementById('pack-subtitle').textContent = data.subtitle;
+  document.title = data.title;
+
+  // Gather every item that needs a Modrinth fetch
+  const allMods  = [...data.loose, ...data.categories.flatMap(c => c.mods)];
+  const allItems = [...allMods, ...allMods.flatMap(m => m.submods)];
+  const needFetch = allItems.filter(item => item.modrinth);
+
+  if (needFetch.length > 0) {
+    status.textContent = 'Fetching ' + needFetch.length + ' mod' + (needFetch.length > 1 ? 's' : '') + ' from Modrinth...';
+
+    // fetch in batches of 6 to be polite to the API
+    const BATCH = 6;
+    for (let i = 0; i < needFetch.length; i += BATCH) {
+      const batch = needFetch.slice(i, i + BATCH);
+      await Promise.all(batch.map(async item => {
+        const api = await fetchFromModrinth(item.modrinth);
+        item._name = (api && api.name) ? api.name : (item.name || slugFromUrl(item.modrinth) || 'Unknown');
+        item._icon = (api && api.icon) ? api.icon : (item.icon || null);
+      }));
+    }
+  }
+
+  // Items without Modrinth just use provided name/icon
+  allItems.filter(item => !item.modrinth).forEach(item => {
+    item._name = item.name || 'Unknown';
+    item._icon = item.icon || null;
+  });
+
+  status.textContent = '';
+
+  // Loose mods (before any category)
+  if (data.loose.length > 0) {
+    const grid = document.createElement('div');
+    grid.className = 'loose-grid';
+    for (const mod of data.loose) {
+      grid.appendChild(buildModTile(mod));
+    }
+    root.appendChild(grid);
+  }
+
+  // Categories
+  for (const cat of data.categories) {
+    root.appendChild(buildCategory(cat));
+  }
+}
+
+// ─── BOOT ────────────────────────────────────────────────────────────────────────
+(async function() {
+  let source = DEFAULT;
+  try {
+    const resp = await fetch('mods/modlist.txt');
+    if (resp.ok) source = await resp.text();
+  } catch (_) {
+    // no modlist.txt found, use embedded default — that's fine
+  }
+  await render(source);
+})();
+</script>
+</body>
+</html>
