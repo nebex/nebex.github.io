@@ -881,7 +881,7 @@ async function render(source) {
 (async function() {
   let source = DEFAULT;
   try {
-    const resp = await fetch('mods/modlist.txt');
+    const resp = await fetch('modlist.txt');
     if (resp.ok) source = await resp.text();
   } catch (_) {
     // no modlist.txt found, use embedded default — that's fine
