@@ -127,6 +127,13 @@ html, body {
   font-family: "JetBrainsMonoNF", monospace;
 }
 
+.link-bar {
+  position: fixed;
+  right: 20px;
+  top: 20px;
+  margin: 0;
+}
+
 /* Aurora sits furthest back — rendered via WebGL, so no CSS blur needed;
    the shader already produces soft, feathered edges on its own. */
 #aurora-canvas {
